@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>mini_qwen_1b 聊天界面</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 mini_qwen_1b 在线聊天</h1>
+        <div id="chat-box"></div>
+        <div class="input-box">
+            <input type="text" id="input" placeholder="输入消息..." onkeydown="if(event.key==='Enter') send()">
+            <button onclick="send()">发送</button>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
