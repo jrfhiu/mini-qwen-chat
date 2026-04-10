@@ -21,23 +21,15 @@ function send() {
   })
   .then(res => res.json())
   .then(data => {
-    console.log("模型返回：", data);
-
-    let reply = "模型回复异常";
-    try {
-      // Gradio 聊天接口标准格式
-      reply = data.data[0][1][1];
-    } catch (e) {
-      try {
-        reply = data.data[0][1];
-      } catch {}
-    }
-
+    // 只打印真实返回，不做任何默认文案
+    console.log(data);
+    let reply = data.data[0][1][1];
     chat.innerHTML += `<div class="bot">${reply}</div>`;
     chat.scrollTop = chat.scrollHeight;
   })
   .catch(err => {
     console.error(err);
-    chat.innerHTML += `<div class="bot">连接错误</div>`;
+    chat.innerHTML += `<div class="bot">出错：${err.message}</div>`;
+    chat.scrollTop = chat.scrollHeight;
   });
 }
