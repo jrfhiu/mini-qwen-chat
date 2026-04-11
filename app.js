@@ -1,6 +1,7 @@
-const API_URL = "https://wschdth-mini-qwen-1b-chat.hf.space/api/predict";
+// ✅ Gradio 4.x 正确 API 地址（唯一能通的）
+const API_URL = "https://wschdth-mini-qwen-1b-chat.hf.space/chat/submit";
 
-function send() {
+async function send() {
   const input = document.getElementById("input");
   const msg = input.value.trim();
   if (!msg) return;
@@ -10,22 +11,27 @@ function send() {
   input.value = "";
   chat.scrollTop = chat.scrollHeight;
 
-  fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ data: [msg, []] })
-  })
-  .then(res => {
-    if (!res.ok) throw new Error("状态码：" + res.status);
-    return res.json();
-  })
-  .then(data => {
-    const reply = data.data[0];
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: msg,
+        history: []
+      })
+    });
+
+    if (!response.ok) throw new Error("状态码：" + response.status);
+
+    const data = await response.json();
+    const reply = data.response;
+
     chat.innerHTML += `<div class="bot">${reply}</div>`;
     chat.scrollTop = chat.scrollHeight;
-  })
-  .catch(err => {
+  } catch (err) {
     chat.innerHTML += `<div class="bot">错误：${err.message}</div>`;
     chat.scrollTop = chat.scrollHeight;
-  });
+  }
 }
