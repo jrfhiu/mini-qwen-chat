@@ -1,4 +1,5 @@
-const API_URL = "https://wschdth-mini-qwen-1b-chat.hf.space/run/predict";
+// ✅ 正确的 Gradio 3.x API 地址
+const API_URL = "https://wschdth-mini-qwen-1b-chat.hf.space/api/predict";
 
 function send() {
   const input = document.getElementById("input");
@@ -15,22 +16,22 @@ function send() {
     headers: {
       "Content-Type": "application/json"
     },
+    // ✅ 正确参数格式：[用户消息, 历史数组]
     body: JSON.stringify({
       data: [msg, []]
     })
   })
   .then(res => {
-    if (!res.ok) throw new Error("HTTP 错误：" + res.status);
+    if (!res.ok) throw new Error("请求失败，状态码：" + res.status);
     return res.json();
   })
   .then(data => {
-    // 直接把真实返回结构显示出来
-    const reply = JSON.stringify(data);
+    // ✅ 正确拿回复的方式
+    const reply = data.data[0];
     chat.innerHTML += `<div class="bot">${reply}</div>`;
     chat.scrollTop = chat.scrollHeight;
   })
   .catch(err => {
-    // 只显示真实错误
     chat.innerHTML += `<div class="bot">错误：${err.message}</div>`;
     chat.scrollTop = chat.scrollHeight;
   });
