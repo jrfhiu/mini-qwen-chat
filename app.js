@@ -1,4 +1,4 @@
-// 完全不带 Token！！！
+// 这就是你自己的模型！！！
 const API_URL = "https://api-inference.huggingface.co/models/wschdth/mini_qwen_1b";
 
 function send() {
@@ -9,20 +9,28 @@ function send() {
   const chat = document.getElementById("chat-box");
   chat.innerHTML += `<div class="user">${msg}</div>`;
   input.value = "";
+  chat.scrollTop = chat.scrollHeight;
 
   fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
-      // 这里彻底空着，不放任何 Token！！！
     },
     body: JSON.stringify({
       inputs: msg
     })
   })
-  .then(res => res.json())
+  .then(response => {
+    if (!response.ok) throw new Error("模型正在启动，请稍等...");
+    return response.json();
+  })
   .then(data => {
-    let reply = data[0]?.generated_text || "抱歉，无法回答";
+    const reply = data[0]?.generated_text || "模型回复";
     chat.innerHTML += `<div class="bot">${reply}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+  })
+  .catch(err => {
+    chat.innerHTML += `<div class="bot">${err.message}</div>`;
+    chat.scrollTop = chat.scrollHeight;
   });
 }
